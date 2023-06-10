@@ -1,0 +1,44 @@
+const jwt = require('jsonwebtoken');
+const con = require('./conn')
+//CREATE TABLE users (ID SERIAL PRIMARY KEY, name VARCHAR(30),phone bigint,email VARCHAR(30),password VARCHAR(30));
+const createUser = (req, res, next) => {
+  var data = req.body
+  username = data['username'], phone = data["phone"], email = data["email"], password = data["password"], tags=data["tags"]
+  con.connPool.query('INSERT INTO users (name, phone, email, password, tags) VALUES ($1, $2, $3, $4, $5)', [username, phone, email, password, tags], (error, results) => {
+    if(error){
+      next(error)
+    }else{
+      res.send(results)
+    }
+  })
+}
+
+const getUserToken = (req, res, next) => {
+  var data = req.body
+  username = data['username'], phone = data["phone"], email = data["email"], password = data["password"], tags=data["tags"]
+  con.connPool.query('Select * from users where name=$1 and password=$2', [username, password], (error, results) => {
+    if(error){
+      next(error)
+    }else{
+      if(results.rows.length>0){
+        token = generateAccessToken(results.rows[0].id)
+        res.set({ 'auth-token': token,
+                  'auth-user': results.rows[0].id
+                })
+        res.send("Authentication successful")
+      }else{
+        res.sendStatus(403);
+      }
+      
+    }
+  })
+}
+
+function generateAccessToken(username) {
+  return jwt.sign({username}, "mysecret", { expiresIn: '1h' });
+}
+
+module.exports = {
+  createUser,
+  getUserToken
+}

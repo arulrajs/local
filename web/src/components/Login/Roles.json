@@ -1,0 +1,14 @@
+[ 
+    { "id": "1", "text": "Student" },
+    { "id": "2", "text": "Farmer" },
+    { "id": "3", "text": "Shop Keeper" },
+    { "id": "4", "text": "Doctor" },
+    { "id": "5", "text": "Medical shop" },
+    { "id": "6", "text": "Teacher" },
+    { "id": "7", "text": "Nurse" },
+    { "id": "8", "text": "Driver" },
+    { "id": "9", "text": "Vegetable seller" },
+    { "id": "10", "text": "House wife" },
+    { "id": "11", "text": "Hotel" },
+    { "id": "12", "text": "Labourer" }
+]
