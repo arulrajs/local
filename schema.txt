@@ -1,0 +1,31 @@
+create table status (
+status_id serial PRIMARY KEY,
+user_id INT NOT NULL,
+message VARCHAR ( 255 ) NOT NULL,
+created_on TIMESTAMP NOT NULL,
+FOREIGN KEY (user_id)
+	REFERENCES users(id)
+);
+
+
+create table search (
+search_id serial PRIMARY KEY,
+result_id INT NOT NULL,
+message VARCHAR ( 255 ) NOT NULL,
+created_on TIMESTAMP NOT NULL,
+FOREIGN KEY (search_id)
+	REFERENCES search_result(search_id)
+);
+
+create table search_result (
+search_id serial PRIMARY KEY,
+result INT NOT NULL,
+message VARCHAR ( 255 ) NOT NULL,
+created_on TIMESTAMP NOT NULL,
+FOREIGN KEY (user_id)
+	REFERENCES users(id)
+);
+
+sequelize model:create --name Users --attributes name:string,phone:string,password:string
+sequelize model:create --name Status --attributes user_id:integer,message:string,time:integer
+sequelize model:create --name Search --attributes query:string,status_id:integer,time:integer
