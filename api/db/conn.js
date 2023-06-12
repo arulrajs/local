@@ -3,7 +3,7 @@ const connPool = new Pool({
   user: 'local',
   host: 'localhost',
   database: 'local',
-  password: 'local$44',
+  password: 'local$$44',
   port: 5432,
 })
 
