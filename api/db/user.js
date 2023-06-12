@@ -4,7 +4,7 @@ const con = require('./conn')
 const createUser = (req, res, next) => {
   var data = req.body
   username = data['username'], phone = data["phone"], password = data["password"]
-  con.connPool.query('INSERT INTO users (name, phone, password) VALUES ($1, $2, $3, $4)', [username, phone, password], (error, results) => {
+  con.connPool.query('INSERT INTO users (name, phone, password) VALUES ($1, $2, $3)', [username, phone, password], (error, results) => {
     if(error){
       next(error)
     }else{
