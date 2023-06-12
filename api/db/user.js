@@ -3,7 +3,7 @@ const con = require('./conn')
 //CREATE TABLE users (ID SERIAL PRIMARY KEY, name VARCHAR(30),phone bigint,email VARCHAR(30),password VARCHAR(30));
 const createUser = (req, res, next) => {
   var data = req.body
-  username = data['username'], phone = data["phone"], password = data["password"]
+  username = data['name'], phone = data["phone"], password = data["password"]
   con.connPool.query('INSERT INTO users (name, phone, password) VALUES ($1, $2, $3)', [username, phone, password], (error, results) => {
     if(error){
       next(error)
