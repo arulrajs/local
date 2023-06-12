@@ -25,9 +25,10 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddDetails from './AddDetails';
 import Autocomplete from '@mui/material/Autocomplete';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { Container, Grid, Paper } from '@mui/material';
 
 const MainDetails = (props) => {
-  const { chats, activeChat, userName } = props;
+  const {userName} = props;
   var [msges, setMsges] = useState();
   var [enableSearch, setEnableSearch] = useState(false);
   var [searchText, setSearchText] = useState();
@@ -76,37 +77,29 @@ const MainDetails = (props) => {
     return msges.map((msg, index) => {
       const isMyMessage = msg && Number(userName) === msg.user.username;
       return (
-        <div key={`msg_${index}`} style={{ height:'100%', width: '100%', scrollBehavior:'auto', padding:"10px"}}>
-          <div className="message-block">
-          { msg.type === "business" && <BusinessCard message={msg} />}
-          { msg.type === "travels" && <TravelsCard message={msg} />}
-          { msg.type === "service" && <ServiceCard message={msg} />}
-          { msg.type === "farming" && <FarmingCard message={msg} />}
-          { msg.type === "realestate" && <RealEstateCard message={msg} />}
-          </div>
-         <span width="100%">
-          <Rating id={`msg_${index}`}
-            name="simple-controlled"
-            value={rating[index]}
-            onChange={(event, newValue) => {
-              rating[index] = newValue
-              setRating(rating);
-            }}
-          />
-          {isMyMessage && <DeleteForeverIcon style={{align:"right"}} />}
-          </span>
-        </div>
+        <Grid item xs={12}>
+          <Paper elevation={3}>
+            { msg.type === "business" && <BusinessCard message={msg} />}
+            { msg.type === "travels" && <TravelsCard message={msg} />}
+            { msg.type === "service" && <ServiceCard message={msg} />}
+            { msg.type === "farming" && <FarmingCard message={msg} />}
+            { msg.type === "realestate" && <RealEstateCard message={msg} />}
+            <Rating id={`msg_${index}`}
+              name="simple-controlled"
+              value={rating[index]}
+              onChange={(event, newValue) => {
+                rating[index] = newValue
+                setRating(rating);
+              }}
+            />
+            {isMyMessage && <DeleteForeverIcon style={{align:"right"}} />}
+          </Paper>
+        </Grid>
       );
     });
   };
 
   const top = ["Shop", "Vegetables", "Hotel", "Fruits", "Plot", "Rent", "Plumber"]
-
-  const updateChat = (message) => {
-    // setMsges(oldArray => [...oldArray, message]);
-    // const msg = {"sender":{"username":"some1",},"text":"Found 10 results ..","id":123}
-    // setTimeout(() => {setMsges(oldArray => [...oldArray, msg])}, 5000)
-  }
 
   const handleAdd = (event)=>{
     event.preventDefault();
@@ -157,60 +150,65 @@ const MainDetails = (props) => {
     loadMessages()
   }
   return (
-    <div className="chat-feed" height="100%" >
-        <Box sx={{ flexGrow: 4 }}>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
+    <Box>
+      <Container sx={{ display: 'flex'}} >
+        <AppBar component="nav">
+            <Toolbar>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    sx={{ mr: 2 }}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                >
+                    Local
+                </Typography>
+                {!enableAdd && !enableSearch &&
+                <IconButton onClick={handleRefresh}>
+                        <RefreshIcon />
                     </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-                    >
-                        Local
-                    </Typography>
-                    {!enableAdd && !enableSearch &&
-                    <IconButton onClick={handleRefresh}>
-                            <RefreshIcon />
-                        </IconButton>
-                    }
-                    {!enableAdd && !enableSearch &&
-                        <IconButton onClick={handleAdd}>
-                            <AddCircleOutlineIcon />
-                        </IconButton>
-                    }
-                    {enableAdd && !enableSearch &&
-                        <IconButton onClick={handleClear} hidden={enableAdd}>
-                            <CancelIcon />
-                        </IconButton>
-                    }
-                    {!enableAdd &&
-                        <Stack spacing={2} sx={{ width: 300 }}>
-                            <Autocomplete onChange={handleSearch}
-                                id="free-solo-demo"
-                                freeSolo
-                                options={top}
-                                renderInput={(params) => <TextField {...params} label="Search..  "  value={searchText}
-                                onChange={e => setSearchText(e.target.value)}/>}
-                            />
-                        </Stack>
-                    }
-                </Toolbar>
-            </AppBar>
-        </Box>
-      {!enableAdd && msges && renderMessages()}
+                }
+                {!enableAdd && !enableSearch &&
+                    <IconButton onClick={handleAdd}>
+                        <AddCircleOutlineIcon />
+                    </IconButton>
+                }
+                {enableAdd && !enableSearch &&
+                    <IconButton onClick={handleClear} hidden={enableAdd}>
+                        <CancelIcon />
+                    </IconButton>
+                }
+                {!enableAdd &&
+                    <Stack spacing={2} sx={{ width: 300 }}>
+                        <Autocomplete onChange={handleSearch}
+                            id="free-solo-demo"
+                            freeSolo
+                            options={top}
+                            renderInput={(params) => <TextField {...params} label="Search..  "  value={searchText}
+                            onChange={e => setSearchText(e.target.value)}/>}
+                        />
+                    </Stack>
+                }
+            </Toolbar>
+        </AppBar>
+      </Container>
+      <Box sx={{display: "flex", marginTop:10}}>
       {enableAdd && <AddDetails submitHandler={addSubmitHandler} imageHandler={addImageHandler}/>}
-      <ToastContainer/>
-    </div>
+        <Container >
+          <Grid container spacing={3}>
+          {!enableAdd && msges && renderMessages()}
+          </Grid>
+        </Container>
+      </Box>
+    </Box>
   );
 };
 

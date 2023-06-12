@@ -1,11 +1,43 @@
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import './Login.css';
-import Roles from './Roles';
+import React from 'react';
+import { TextField, Button, Box} from "@mui/material";
 
-async function registerUser(userData) {
+export default function Register({ setRegister, setMessage }) {
+  var err = undefined
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    var object = {};
+    if (err !== undefined){
+      setMessage(err);
+      err = undefined;
+      return false;
+    }
+    formData.forEach((value, key) => {
+      if(value === ""){
+        err = "Value missing for "+key
+      }else if(key === "phone" && value.length <10 ){
+        err = "Enter valid phone number"
+      }else if(value.length <6){
+        err = "User name, password must be more than 6 char len"
+      }
+      if (err !== undefined){
+        setMessage(err);
+      }else{
+        object[key] = value
+      }
+      
+    });
+    if (err === undefined){
+      const userData = await registerUser(object);
+      if(userData){
+        setRegister(false);
+      }
+    }else{
+      return false
+    }
+  }
+
+  async function registerUser(userData) {
     return fetch('/api/user/register', {
       method: 'POST',
       headers: {
@@ -16,74 +48,68 @@ async function registerUser(userData) {
       if(res.status >= 400) {
         res.text().then(text => { 
           console.log(text) 
-          toast.error(JSON.parse(text).error);
+          setMessage(JSON.parse(text).error);
         })          
           return false
       }
-      toast.success("User registration successful");
+      setMessage("User registration successful");
       return res.json();
     })
-}
-
-
-export default function Register({ setRegister }) {
-  const [username, setUserName] = useState();
-  const [phone, setPhone] = useState();
-  const [mail, setMail] = useState();
-  const [password, setPassword] = useState();
-  const [roleTags, setInput] =   React.useState('')
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const userData = await registerUser({
-      username,
-      phone,
-      mail,
-      password,
-      roleTags
-    });
-    if(userData){
-      setRegister(false);
-    }
-    
   }
 
   return(
-    <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
-        <form onSubmit={handleSubmit} >
-        <label>
-            <p>Username</p>
-            <input id="username" type="text" onChange={e => setUserName(e.target.value)}required/>
-        </label>
-        <label>
-            <p>Phone</p>
-            <input id="phone" type="number" onChange={e => setPhone(e.target.value)} required/>
-        </label>
-        <label>
-            <p>Mail</p>
-            <input id="mail" type="mail" onChange={e => setMail(e.target.value)}/>
-        </label>                
-        <label>
-            <p>Password</p>
-            <input id="password" type="password" onChange={e => setPassword(e.target.value)} required/>
-        </label>
-        <label>
-            <p>Roles</p>
-            <input hidden name="tags" id="tagsID" value={roleTags} />
-            <Roles handleInput={setInput}></Roles>
-            
-        </label>
-        <div style={{paddingTop:'10px', alignItems:"right", paddingLeft:"40%"}}>
-          <button onClick={()=>setRegister(false)}>Cancel</button>
-          <button type="submit">Create</button>
-        </div>
+    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="phone"
+        label="Phone"
+        name="phone"
+        autoComplete="phone"
+        type="number"
+        autoFocus
+        error={err}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="name"
+        label="Name"
+        name="name"
+        autoComplete="name"
+        error={err}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        name="password"
+        label="Password"
+        type="password"
+        id="password"
+        autoComplete="current-password"
+        error={err}
+      />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
         
-        </form>
-       <ToastContainer/>
-    </div>
-    
+      >
+       Register
+      </Button>
+      <Button
+        type="cancel"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={(e)=>{e.preventDefault();setRegister(false);}}
+      >
+        Cancel
+      </Button>
+    </Box>    
   )
 }
-
-Register.propTypes = {
-  setRegister: PropTypes.func.isRequired
-};

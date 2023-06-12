@@ -5,6 +5,7 @@ import RealEstateForm from '../forms/RealEstate';
 import ServiceForm from '../forms/Service';
 import TransportForm from '../forms/Transport';
 import FarmingForm from '../forms/Farming';
+import { Box } from '@mui/material';
 export default function AddDetails(props) {
     const {submitHandler, imageHandler} = props;
     const [tabIndex, setTabIndex] = useState(0);

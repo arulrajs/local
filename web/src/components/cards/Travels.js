@@ -1,11 +1,10 @@
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import PhoneIcon from '@mui/icons-material/Phone';
+import { Card } from '@mui/material';
 const TravelsCard = ({ lastMessage, message }) => {  
     return (
-      <div className="card">
-        <div className="card-avatar">
-            <img alt="shop" src={"/api/images/"+message.fileName} width="150px" height="150px"/>
-        </div>
+      <Card>
+        <img alt="shop" src={"/api/images/"+message.fileName} width="100%" height="150px"/>
         <div className="card-details">
             <h3><div className="name">{message.name}</div></h3>
             <div className="occupation">{message.address}</div>
@@ -31,7 +30,7 @@ const TravelsCard = ({ lastMessage, message }) => {
               </div>
             </div>
         </div>
-      </div>
+      </Card>
     );
   };
   

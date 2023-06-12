@@ -15,8 +15,8 @@ const createUser = (req, res, next) => {
 
 const getUserToken = (req, res, next) => {
   var data = req.body
-  username = data['username'], phone = data["phone"], email = data["email"], password = data["password"], tags=data["tags"]
-  con.connPool.query('Select * from users where name=$1 and password=$2', [username, password], (error, results) => {
+  phone = data["phone"], password = data["password"]
+  con.connPool.query('Select * from users where phone=$1 and password=$2', [phone, password], (error, results) => {
     if(error){
       next(error)
     }else{
