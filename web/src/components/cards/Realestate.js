@@ -3,7 +3,7 @@ import { Card } from "@mui/material";
 const RealEstateCard = ({ lastMessage, message }) => {  
     return (
       <Card>
-        <img alt="shop" src={"/api/images/"+message.fileName} width="100%" height="150px"/>
+        <img alt="shop" src={message.fileName} width="100%" height="150px"/>
         <div className="card-details">
             <h3><div className="name">{message.name}</div></h3>
             <div className="occupation">{message.address}</div>

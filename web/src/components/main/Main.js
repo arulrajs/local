@@ -34,7 +34,7 @@ const MainDetails = (props) => {
   var [searchText, setSearchText] = useState();
   var [enableAdd, setEnableAdd] = useState(false);
   const [rating, setRating] =useState({})
-
+  var fileContent = undefined
   const loadMessages = (searchText) =>{
     if(searchText === undefined ){
       send('/api/status', "GET",undefined, undefined, msgHandler, msgError, true)
@@ -106,11 +106,11 @@ const MainDetails = (props) => {
     setEnableAdd(true)
   }
 
-  const addImageHandler = (image, fileNameUpdate) =>{
-    let uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-    console.log(uniqueId)
-    send('/api/images', "POST",{'Content-type': 'application/json'}, JSON.stringify({"name":uniqueId, "blob":image}), imageSuccess, msgError, true, fileNameUpdate)
+  const addImageHandler = (image, fileNameUpdate, fileName) =>{
+    send('/api/images', "POST",{'Content-type': 'application/json'}, JSON.stringify({"name":fileName, "blob":image}), imageSuccess, msgError, true, fileNameUpdate)
   }
+
+
 
   const addSubmitHandler = (data)=>{
     send('/api/status', "POST",{'Content-type': 'application/json'}, JSON.stringify(data),addResponseHander, msgError)

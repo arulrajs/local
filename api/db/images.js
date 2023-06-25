@@ -1,14 +1,26 @@
 var esClient = require('./es-client')
-esClient.createIndex('images')
+const fs = require('fs');
+var path = require('path');
 
 const createImages = async(req, res, next) => {
   const data = req.body
   data.user = req.user
   data.time = Date.now()
-  const results = await esClient.insertIndex("images", data, data.name)
-  res.send({"name": data.name})
+  console.log(req.user)
+  const imageFile = path.join('/public/images', req.user.username+"_"+data.name)
+  const imagePath = path.join(__dirname, imageFile)
+  fs.writeFile(imagePath, data.blob.replace(/^data:image\/?[A-z]*;base64,/, ""), err => {
+    if (err) {
+      console.error(err);
+      res.send({"error": err})
+    }else{
+      res.send({"name": imageFile})
+    }
+    // file written successfully
+  });
 }
 
+//Not used
 const getImages = async(req, res, next) => {
   const rec = []
   const name = req.params.name

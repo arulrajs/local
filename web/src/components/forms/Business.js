@@ -1,12 +1,13 @@
+import React, {useState} from 'react';
 export default function BusinessForm(props) {
     const {submitHandler, imageHandler} = props;
-    var fileName = '';
+    let fileName = '';
     const handleSubmit = event => {
         event.preventDefault();
         console.log(event); 
         const data = {"type": "business", "name": event.target.name.value, "address": event.target.address.value, "contact": event.target.contact.value,
                         "location": event.target.location.value, "open":event.target.open_timing.value, "close":event.target.close_timing.value,
-                        "category": event.target.category.value, "fileName": fileName, "holiday":event.target.holiday.value
+                        "category": event.target.category.value, "fileName": fileName, "holiday":event.target.holiday.value, "place":event.target.place.value
                     }
         submitHandler(data);
     };
@@ -14,18 +15,18 @@ export default function BusinessForm(props) {
     const handleFileChange = event => {
         console.log(event); 
         let files = event.target.files;
-        let f = files[0];
+        fileName = files[0];
         let reader = new FileReader();
         reader.onloadend = function() {
             console.log('RESULT', reader.result)
-            imageHandler(reader.result, fileNameHandler );
+            imageHandler(reader.result, fileNameHandler, fileName.name );
         }
-      reader.readAsDataURL(f);
+      reader.readAsDataURL(fileName);
     }
 
     const fileNameHandler = name =>{
+        fileName = name
         console.log(name); 
-        fileName = name;
     }
 
     return(
@@ -62,6 +63,14 @@ export default function BusinessForm(props) {
                         </td>
                         <td>
                             <input type="tel" placeholder="contact" id="contact"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Place</label>
+                        </td>
+                        <td>
+                            <input type="text" placeholder="Place" id="place"/>
                         </td>
                     </tr>
                     <tr>
@@ -104,7 +113,7 @@ export default function BusinessForm(props) {
                             <label>Picture</label>
                         </td>
                         <td>
-                            <input type="file" id="picture" onChange={handleFileChange}/>
+                            <input type="file" id="picture" onChange={handleFileChange} accept="image/*" capture/>
                         </td>
                     </tr>
                     <tr>

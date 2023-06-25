@@ -106,7 +106,7 @@ export default function TransportForm(props) {
                             <label>Picture</label>
                         </td>
                         <td>
-                            <input type="file" id="picture" onChange={handleFileChange}/>
+                            <input type="file" id="picture" onChange={handleFileChange} accept="image/*" capture/>
                         </td>
                     </tr>
                    
